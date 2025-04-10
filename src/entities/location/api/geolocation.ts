@@ -1,7 +1,7 @@
 import {
   Location,
   LocationError,
-  PermissionState,
+  LocationPermissionState,
 } from "@/entities/location/model/types";
 
 /**
@@ -16,43 +16,57 @@ const GEOLOCATION_OPTIONS: PositionOptions = {
 /**
  * 브라우저의 위치 정보 권한 상태를 확인합니다.
  */
-export const checkLocationPermission = async (): Promise<PermissionState> => {
-  if (!("permissions" in navigator)) return "unsupported";
+export const checkLocationPermission =
+  async (): Promise<LocationPermissionState> => {
+    if (!("permissions" in navigator)) return "prompt";
 
-  try {
-    const permission = await navigator.permissions.query({
-      name: "geolocation",
-    });
-    return permission.state as PermissionState;
-  } catch {
-    return "unsupported";
+    try {
+      const permission = await navigator.permissions.query({
+        name: "geolocation",
+      });
+      return permission.state as LocationPermissionState;
+    } catch {
+      return "prompt";
+    }
+  };
+
+/**
+ * 현재 위치를 콜백 방식으로 가져옵니다.
+ */
+export const getCurrentLocationWithCallback = (
+  onSuccess: (location: Location) => void,
+  onError: (error: LocationError) => void,
+): void => {
+  if (!("geolocation" in navigator)) {
+    onError(
+      new LocationError(0, "Geolocation is not supported by this browser."),
+    );
+    return;
   }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      onSuccess({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        timestamp: position.timestamp,
+      });
+    },
+    (error) => {
+      onError(new LocationError(error.code, error.message));
+    },
+    GEOLOCATION_OPTIONS,
+  );
 };
 
 /**
- * 현재 위치를 가져옵니다.
+ * 현재 위치를 Promise 방식으로 가져옵니다.
  */
 export const getCurrentLocation = (): Promise<Location> => {
   return new Promise((resolve, reject) => {
-    if (!("geolocation" in navigator)) {
-      reject(
-        new LocationError(0, "Geolocation is not supported by this browser."),
-      );
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        resolve({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          timestamp: position.timestamp,
-        });
-      },
-      (error) => {
-        reject(new LocationError(error.code, error.message));
-      },
-      GEOLOCATION_OPTIONS,
+    getCurrentLocationWithCallback(
+      (location) => resolve(location),
+      (error) => reject(error),
     );
   });
 };
