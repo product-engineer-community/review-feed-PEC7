@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
-import { LOGIN_PATHNAME } from "@/shared/config/pathname";
-import { Button } from "@/shared/ui";
-import { createClient } from "@/shared/utils/supabase/server";
+import { LOGIN_PATHNAME } from '@/shared/config/pathname';
+import { Button } from '@/shared/ui/button';
+import { createClient } from '@/shared/utils/supabase/server';
 
 export default async function AuthButton() {
   const supabase = await createClient();
@@ -13,7 +13,7 @@ export default async function AuthButton() {
   } = await supabase.auth.getUser();
 
   const signOut = async () => {
-    "use server";
+    'use server';
 
     const supabase = await createClient();
     await supabase.auth.signOut();

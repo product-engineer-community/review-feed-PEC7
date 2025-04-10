@@ -1,11 +1,6 @@
 {
   "root": true,
-  "extends": [
-    "next/core-web-vitals",
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
+  "extends": "next/core-web-vitals",
   "parser": "@typescript-eslint/parser",
   "plugins": ["simple-import-sort", "import"],
   "rules": {

@@ -1,0 +1,112 @@
+# 프로젝트 구조 설정 계획
+
+## 목표
+
+- FSD 아키텍처에 따른 프로젝트 구조 설정
+- 필요한 디렉토리 및 파일 구조 생성
+- 기본 설정 파일 구성
+- 맡은 기능에 대한 세그먼트 정의
+
+## 작업 항목
+
+1. 기본 디렉토리 구조 설정
+
+   - app/
+   - features/
+   - entities/
+   - shared/
+   - widgets/
+   - config/
+
+2. 설정 파일 구성
+
+   - tsconfig.json
+   - tailwind.config.js
+   - next.config.js
+   - .env.example
+
+3. 기본 컴포넌트 구조 설정
+
+   - shared/ui/
+   - shared/hooks/
+   - shared/api/
+
+4. 세그먼트 정의
+
+   - 맡은 기능 분석
+   - 세그먼트 구조 설계
+   - 세그먼트 문서화
+
+5. 문서화
+   - README.md 업데이트
+   - 각 레이어별 설명 문서 작성
+   - 세그먼트 구조 문서 작성
+
+## 엔티티 구조 정의
+
+### Feed
+
+- 책임: 피드의 기본 정보와 표시를 담당
+- 구조:
+  ```
+  feed/
+  ├── model/
+  │   ├── types.ts         # Feed 타입 정의
+  │   ├── feed-model.ts    # Feed 관련 모델 함수
+  │   └── index.ts         # Public API
+  └── ui/
+      ├── feed-item.tsx    # 피드 아이템 컴포넌트
+      └── index.ts         # Public API
+  ```
+- 데이터 구조:
+  - Feed
+    - id: string
+    - content: string
+    - createdAt: string
+    - userId: string
+    - imageUrl: string
+    - rating: number
+    - reviewText: string
+    - restaurantName: string
+
+### Favorite (예정)
+
+- 책임: 피드의 좋아요 기능을 담당
+- 구조: TBD
+
+## 파일 추적 규칙
+
+- plan.md: 작업 계획 및 변경사항 정의
+- progress.md: 작업 진행 상황 및 완료된 작업 기록
+- TODO.txt: 다음 작업 목록 관리
+- context-summary.md: 컨텍스트 리셋 백업
+- docs/[component].md: 기능별 문서화
+
+## 작업 진행 규칙
+
+1. 계획 단계
+
+   - plan.md에 작업 계획 작성
+   - 작업 항목 및 예상 소요 시간 정의
+   - 필요한 파일 추적 규칙 정의
+
+2. 실행 단계
+
+   - progress.md에 현재 작업 상태 기록
+   - 작업 완료 시 progress.md 업데이트
+   - 다음 작업 항목 확인
+
+3. 문서화 단계
+   - 작업 완료 후 관련 문서 업데이트
+   - 변경사항 기록
+   - 다음 작업을 위한 TODO.txt 업데이트
+
+## 예상 소요 시간
+
+- 기본 구조 설정: 1시간
+- 설정 파일 구성: 30분
+- 기본 컴포넌트 구조: 1시간
+- 세그먼트 정의: 2시간
+- 문서화: 30분
+
+총 예상 시간: 5시간
