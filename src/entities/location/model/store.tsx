@@ -1,20 +1,43 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import {
   checkLocationPermission,
   getCurrentLocation,
 } from "@/entities/location/api/geolocation";
-import {
-  LocationError,
+import { getRegionInfo } from "@/entities/location/api/kakao";
+
+import type {
+  LocationPermissionState,
   LocationState,
-  PermissionState,
-} from "@/entities/location/model/types";
+  RegionState,
+} from "./types";
+
+// 기본 위치 정보 (서울시 종로구 종로1가)
+const DEFAULT_LOCATION = {
+  latitude: 37.570705,
+  longitude: 126.992369,
+  timestamp: Date.now(),
+};
+
+// 기본 행정구역 정보
+const DEFAULT_REGION = {
+  city: "서울특별시",
+  district: "종로구",
+  neighborhood: "종로1가",
+};
 
 interface LocationContextType {
   locationState: LocationState;
-  permissionState: PermissionState;
+  permissionState: LocationPermissionState;
+  regionState: RegionState;
   refreshLocation: () => Promise<void>;
 }
 
@@ -38,75 +61,110 @@ interface LocationProviderProps {
 export const LocationProvider = ({
   children,
   watchInterval = 5 * 60 * 1000, // 기본값 5분
-}: LocationProviderProps): React.ReactNode => {
+}: LocationProviderProps) => {
   const [locationState, setLocationState] = useState<LocationState>({
     status: "idle",
     data: null,
     error: null,
   });
+
   const [permissionState, setPermissionState] =
-    useState<PermissionState>("prompt");
+    useState<LocationPermissionState>("prompt");
 
-  const updateLocation = async () => {
-    setLocationState((prev) => ({ ...prev, status: "loading" }));
+  const [regionState, setRegionState] = useState<RegionState>({
+    status: "idle",
+    data: null,
+    error: null,
+  });
 
+  const updateLocation = useCallback(async () => {
     try {
+      setLocationState((prev) => ({
+        ...prev,
+        status: "loading",
+        error: null,
+      }));
+      setRegionState((prev) => ({
+        ...prev,
+        status: "loading",
+        error: null,
+      }));
+
       const location = await getCurrentLocation();
       setLocationState({
         status: "success",
         data: location,
         error: null,
       });
+
+      try {
+        const region = await getRegionInfo(
+          location.latitude,
+          location.longitude,
+        );
+        setRegionState({
+          status: "success",
+          data: region,
+          error: null,
+        });
+      } catch (error) {
+        console.warn("Failed to get region info, using default region:", error);
+        setRegionState({
+          status: "success",
+          data: DEFAULT_REGION,
+          error: null,
+        });
+      }
     } catch (error) {
+      console.warn("Failed to get location, using default location:", error);
       setLocationState({
-        status: "error",
-        data: null,
-        error: error as LocationError,
+        status: "success",
+        data: DEFAULT_LOCATION,
+        error: null,
+      });
+      setRegionState({
+        status: "success",
+        data: DEFAULT_REGION,
+        error: null,
       });
     }
-  };
-
-  const refreshLocation = async () => {
-    const permission = await checkLocationPermission();
-    setPermissionState(permission);
-
-    if (permission === "granted") {
-      await updateLocation();
-    } else if (permission === "prompt") {
-      // 권한이 prompt 상태일 때 즉시 위치 정보를 요청하여 권한 팝업을 띄웁니다
-      try {
-        await getCurrentLocation();
-        // 권한이 허용되면 위치 정보를 다시 가져옵니다
-        await refreshLocation();
-      } catch (error) {
-        // 권한이 거부되면 에러 상태를 설정합니다
-        setLocationState({
-          status: "error",
-          data: null,
-          error: error as LocationError,
-        });
-        // 권한 상태를 다시 확인합니다
-        const newPermission = await checkLocationPermission();
-        setPermissionState(newPermission);
-      }
-    }
-  };
+  }, []);
 
   useEffect(() => {
-    // 컴포넌트가 마운트되면 즉시 위치 정보를 요청합니다
-    refreshLocation();
+    const checkPermission = async () => {
+      const permission = await checkLocationPermission();
+      setPermissionState(permission);
 
-    // 주기적으로 위치 정보 갱신
-    if (watchInterval > 0) {
-      const intervalId = setInterval(refreshLocation, watchInterval);
+      if (permission === "granted") {
+        await updateLocation();
+      } else {
+        // 권한이 거부되거나 아직 요청되지 않은 경우 기본값 사용
+        setLocationState({
+          status: "success",
+          data: DEFAULT_LOCATION,
+          error: null,
+        });
+        setRegionState({
+          status: "success",
+          data: DEFAULT_REGION,
+          error: null,
+        });
+      }
+    };
+
+    checkPermission();
+
+    if (watchInterval && watchInterval > 0) {
+      const intervalId = setInterval(updateLocation, watchInterval);
       return () => clearInterval(intervalId);
     }
-  }, [watchInterval]);
+  }, [watchInterval, updateLocation]);
 
   const value = {
     locationState,
     permissionState,
-    refreshLocation,
+    regionState,
+    refreshLocation: updateLocation,
   };
 
   return (
