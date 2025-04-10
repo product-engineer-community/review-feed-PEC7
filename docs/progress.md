@@ -114,3 +114,11 @@
   - Supabase에서 feeds 테이블 데이터 조회
   - created_at 기준 내림차순 정렬
   - 에러 핸들링 추가
+
+### 파일 네이밍 컨벤션 적용
+
+- [x] UI 컴포넌트 파일명 케밥 케이스로 통일
+  - Logo.tsx -> logo.tsx
+  - ExternalLink.tsx -> external-link.tsx
+- [x] import 경로 수정
+  - nav.tsx와 layout.tsx의 import 경로 업데이트

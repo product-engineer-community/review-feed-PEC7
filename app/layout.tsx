@@ -6,8 +6,8 @@ import { GeistSans } from 'geist/font/sans';
 import { Nav } from '@/widgets/header/ui';
 
 import AuthButton from '@/features/auth/ui/AuthButton';
-import { ExternalLink } from '@/shared/ui/ExternalLink';
-import { Logo } from '@/shared/ui/Logo';
+import { ExternalLink } from '@/shared/ui/external-link';
+import { Logo } from '@/shared/ui/logo';
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`

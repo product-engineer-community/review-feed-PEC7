@@ -94,6 +94,27 @@
 - context-summary.md: 컨텍스트 리셋 백업
 - docs/[component].md: 기능별 문서화
 
+## 파일 네이밍 컨벤션
+
+1. 파일 및 디렉토리 이름
+
+   - 모든 파일과 디렉토리 이름은 케밥 케이스(kebab-case) 사용
+   - 예: `feed-item.tsx`, `auth-button.tsx`, `external-link.tsx`
+
+2. 컴포넌트 이름
+
+   - 컴포넌트는 파스칼 케이스(PascalCase) 사용
+   - 예: `FeedItem`, `AuthButton`, `ExternalLink`
+
+3. 변수 및 함수 이름
+
+   - 카멜 케이스(camelCase) 사용
+   - 예: `getFeedList`, `useAuthState`
+
+4. 타입 및 인터페이스
+   - 파스칼 케이스(PascalCase) 사용
+   - 예: `FeedProps`, `AuthState`
+
 ## 작업 진행 규칙
 
 1. 계획 단계
