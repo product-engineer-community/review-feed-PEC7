@@ -9,6 +9,13 @@
 - ✅ **Modular** – Keep files under 200–300 lines when possible.
 - ✅ **Public API Only via `index.ts`** – All external access must go through `index.ts`.
 - ✅ **Documentation** – Summarize major components in `/docs/[component].md`.
+- ✅ **Naming Convention** – Use kebab-case for folder and file names.
+- ✅ **App Structure** – Manage both app and pages within the app directory.
+- ✅ **Configuration** – Use `config` folder for constants and configurations.
+- ✅ **Shared Resources** – Place shared hooks in `shared/hooks`.
+- ✅ **UI Components** – Use `ui` instead of `components` for component folders.
+- ✅ **Feature Structure** – Each feature should have api, model, query, hook, and ui folders.
+- ✅ **Business Logic Separation** – React-related business logic in hooks, other business logic in models.
 
 ### FSD Structure
 
@@ -84,3 +91,72 @@ feature/
 - ✅ Include test suggestions for major features.
 - ✅ Apply SOLID principles selectively.
 - 🔁 When token context exceeds 100k, generate `context-summary.md` and restart.
+
+## Commit Message Rules
+
+### Basic Rules
+- 제목과 본문을 빈 행으로 구분
+- 제목은 50글자 이내로 제한
+- 제목의 첫 글자는 대문자로 작성
+- 제목 끝에는 마침표를 넣지 않음
+- 제목은 명령문으로 사용하며 과거형을 사용하지 않음
+- 본문의 각 행은 72글자 내로 제한
+- 어떻게 보다는 무엇과 왜를 설명
+
+### Commit Message Structure
+```
+type(scope): subject
+
+body
+
+footer
+```
+
+### Types
+| Type      | Description                                    |
+|-----------|------------------------------------------------|
+| feat      | 새로운 기능 추가                               |
+| fix       | 버그 수정                                      |
+| build     | 빌드 관련 파일 수정 / 모듈 설치 또는 삭제      |
+| chore     | 그 외 자잘한 수정                              |
+| ci        | CI 관련 설정 수정                              |
+| docs      | 문서 수정                                      |
+| style     | 코드 스타일 혹은 포맷 등에 관한 수정           |
+| refactor  | 코드 리팩토링                                  |
+| test      | 테스트 코드 수정                               |
+| perf      | 성능 개선                                      |
+
+### Structure Details
+- **Header**: 필수이며 `type(scope): subject` 형식
+  - type: 커밋의 성격을 나타내는 타입 (위 표 참조)
+  - scope: 선택사항, 변경사항의 범위
+  - subject: 변경사항의 간단한 설명
+
+- **Body**: 선택사항
+  - Header에서 표현할 수 없는 상세한 내용
+  - 변경사항의 이유와 영향 설명
+
+- **Footer**: 선택사항
+  - 참조 정보 (예: Issues #1234)
+  - Breaking Changes 등 추가 정보
+
+### Examples
+```
+feat(auth): Add Google OAuth login
+
+Implement Google OAuth authentication using Supabase.
+- Add Google OAuth provider configuration
+- Create login button component
+- Handle OAuth callback
+
+Closes #123
+```
+
+```
+fix(ui): Resolve button alignment in header
+
+Fix the misaligned buttons in the header component by adjusting
+the flex container properties.
+
+Fixes #456
+```
