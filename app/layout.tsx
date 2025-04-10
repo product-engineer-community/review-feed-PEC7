@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
 import { GeistSans } from 'geist/font/sans';
+import { Nav } from '@/widgets/header/ui';
 
 import AuthButton from '@/features/auth/ui/AuthButton';
 import { ExternalLink } from '@/shared/ui/ExternalLink';
@@ -28,17 +29,18 @@ export default function RootLayout({
   return (
     <html lang="ko" className={GeistSans.className}>
       <body className="bg-background text-foreground">
+        <Nav />
         <main className="flex min-h-screen flex-col items-center">
-          <nav className="flex h-16 w-full justify-center border-b border-b-foreground/10">
+          <nav className="border-b-foreground/10 flex h-16 w-full justify-center border-b">
             <div className="flex w-full max-w-5xl items-center justify-between px-4 text-sm">
               <Logo />
               <AuthButton />
             </div>
           </nav>
 
-          {children}
+          <div className="pt-16">{children}</div>
 
-          <footer className="flex w-full justify-center border-t border-t-foreground/10 p-4 text-center text-xs">
+          <footer className="border-t-foreground/10 flex w-full justify-center border-t p-4 text-center text-xs">
             <div className="text-left text-stone-400">
               <div>상호명: 마중물 | 대표: 황경찬</div>
               <div>사업자등록번호: 264-01-01901</div>

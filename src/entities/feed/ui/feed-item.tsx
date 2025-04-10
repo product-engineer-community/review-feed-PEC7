@@ -6,26 +6,28 @@ interface FeedItemProps {
 
 export const FeedItem = ({ feed }: FeedItemProps) => {
   return (
-    <div className="overflow-hidden rounded-lg border bg-white">
+    <div className="relative overflow-hidden rounded-lg">
       {/* 이미지 */}
-      <div className="relative">
+      <div className="relative aspect-square">
         <img
-          src={feed.imageUrl}
-          alt={feed.content}
-          className="aspect-square w-full object-cover"
+          src={feed.image_url}
+          alt={feed.title}
+          className="h-full w-full object-cover"
         />
-        <div className="absolute bottom-4 left-4 rounded-full bg-black/50 px-3 py-1 text-white">
-          ★ {feed.rating.toFixed(1)}
-        </div>
-      </div>
+        {/* 오버레이 그라데이션 */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
 
-      {/* 컨텐츠 */}
-      <div className="px-4 pb-4">
-        <p className="mb-2 font-medium">{feed.reviewText}</p>
-        <p className="text-sm text-gray-500">{feed.restaurantName}</p>
-        <p className="text-sm text-gray-500">
-          {new Date(feed.createdAt).toLocaleDateString()}
-        </p>
+        {/* 컨텐츠 오버레이 */}
+        <div className="absolute bottom-0 left-0 w-full p-4 text-white">
+          <div className="mb-1 flex items-center">
+            <span className="mr-1 text-lg">★</span>
+            <span className="font-medium">{feed.rating.toFixed(1)}</span>
+          </div>
+          <p className="mb-1 line-clamp-2 text-sm font-medium">
+            {feed.review_text}
+          </p>
+          <p className="text-sm text-white/80">{feed.restaurant_name}</p>
+        </div>
       </div>
     </div>
   );

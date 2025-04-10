@@ -1,13 +1,12 @@
 // Feed 관련 타입 정의
 export interface Feed {
   id: string;
-  content: string;
-  createdAt: string;
-  userId: string;
-  imageUrl: string;
+  title: string;
+  image_url: string;
+  created_at: string;
   rating: number;
-  reviewText: string;
-  restaurantName: string;
+  review_text: string;
+  restaurant_name: string;
 }
 
 export type FeedList = Feed[];
