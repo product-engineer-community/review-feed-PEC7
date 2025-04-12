@@ -11,3 +11,12 @@ export interface NaverReview {
   body: string;
   moreKeywords: string;
 }
+
+export interface KakaoReview {
+  nickname: string;
+  profileImage: string;
+  reviewDate: string;
+  rating: string;
+  body: string;
+  photos: string[];
+}

@@ -1,5 +1,5 @@
-import { fetchNaverReviews } from '@/entities/review/api/crawl';
-import { ReviewCard } from '@/entities/review/ui/review-card';
+import { fetchNaverReviews } from "@/src/entities/review/api/crawl-naver";
+import { ReviewCard } from "@/entities/review/ui/review-card";
 
 export default async function FeedPage({
   params,
@@ -10,8 +10,8 @@ export default async function FeedPage({
   const reviews = await fetchNaverReviews(id);
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">식당 리뷰</h1>
+    <div className="mx-auto max-w-3xl p-6">
+      <h1 className="mb-4 text-2xl font-bold">식당 리뷰</h1>
       <ul className="space-y-6">
         {reviews.map((r, i) => (
           <li key={i}>
