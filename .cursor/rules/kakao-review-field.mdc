@@ -1,3 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 🟡 Kakao Place Review Field Definitions
 
 This document defines the structure and extractable fields for visitor reviews on Kakao Place (https://place.map.kakao.com). Each review is represented by a <li> element under the .list_evaluation .evaluation_review container.

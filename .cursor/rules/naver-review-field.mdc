@@ -1,3 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 Naver Place Review Field Definitions
 
 This document defines the structure and extractable fields for reviews found on the mobile version of Naver Place (m.place.naver.com). Each review is contained in a <li class="place_apply_pui EjjAW"> element.

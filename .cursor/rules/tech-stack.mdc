@@ -1,7 +1,13 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
 ## 🔧 Technical Stack – "Use These Tools"
 
 - **Frontend**: Next.js (App Router)
 - **Styling**: Tailwind CSS
+- **UI Framework**: Shadcn
 - **State Management**: React Hooks
 - **Database & Auth**: Supabase
 - **No** additional backend frameworks (e.g., no Express.js, Firebase)
