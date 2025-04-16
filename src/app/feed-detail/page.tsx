@@ -1,43 +1,72 @@
 import { fetchReviews } from "@/entities/review/api/fetch-reviews";
-import { ReviewCard } from "@/entities/review/ui/review-card";
+import { ReviewDetailContent, ErrorState } from "@/entities/review/ui";
+import { NaverReview, KakaoReview } from "@/entities/review/model/types";
+import { Suspense } from "react";
+import FeedDetailLoading from "./loading";
 
 interface FeedDetailPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function FeedDetailPage({ searchParams }: FeedDetailPageProps) {
+export default async function FeedDetailPage({
+  searchParams,
+}: FeedDetailPageProps) {
   const params = await searchParams;
 
   const naverId = typeof params.naver === "string" ? params.naver : undefined;
   const kakaoId = typeof params.kakao === "string" ? params.kakao : undefined;
 
+  // No IDs provided
   if (!naverId && !kakaoId) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="rounded-lg bg-destructive/10 p-4 text-destructive">
-          Error: No place IDs provided
-        </div>
-      </div>
+      <ErrorState
+        title="장소 ID가 없습니다"
+        message="네이버 또는 카카오 장소 ID가 필요합니다."
+      />
     );
   }
 
-  try {
-    const { naverReviews, kakaoReviews } = await fetchReviews(naverId, kakaoId);
+  // Initialize variables for reviews and errors
+  let naverReviews: NaverReview[] = [];
+  let kakaoReviews: KakaoReview[] = [];
+  let naverError: Error | null = null;
+  let kakaoError: Error | null = null;
 
-    return (
-      <main className="min-h-screen bg-background py-8">
-        <div className="container mx-auto px-4">
-          <ReviewCard naverReviews={naverReviews} kakaoReviews={kakaoReviews} />
-        </div>
-      </main>
-    );
-  } catch (error) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="rounded-lg bg-destructive/10 p-4 text-destructive">
-          Error: {error instanceof Error ? error.message : "Failed to fetch reviews"}
-        </div>
-      </div>
-    );
+  // Fetch Naver reviews if ID is provided
+  if (naverId) {
+    try {
+      const result = await fetchReviews(naverId, undefined);
+      naverReviews = result.naverReviews;
+    } catch (e) {
+      naverError =
+        e instanceof Error
+          ? e
+          : new Error("네이버 리뷰를 불러오는 중 오류가 발생했습니다.");
+    }
   }
+
+  // Fetch Kakao reviews if ID is provided
+  if (kakaoId) {
+    try {
+      const result = await fetchReviews(undefined, kakaoId);
+      kakaoReviews = result.kakaoReviews;
+    } catch (e) {
+      kakaoError =
+        e instanceof Error
+          ? e
+          : new Error("카카오 리뷰를 불러오는 중 오류가 발생했습니다.");
+    }
+  }
+
+  // Render content with appropriate state handling
+  return (
+    <Suspense fallback={<FeedDetailLoading />}>
+      <ReviewDetailContent
+        naverReviews={naverReviews}
+        kakaoReviews={kakaoReviews}
+        naverError={naverError}
+        kakaoError={kakaoError}
+      />
+    </Suspense>
+  );
 }
