@@ -32,30 +32,34 @@ export default async function FeedDetailPage({
   let naverError: Error | null = null;
   let kakaoError: Error | null = null;
 
-  // Fetch Naver reviews if ID is provided
-  if (naverId) {
-    try {
-      const result = await fetchReviews(naverId, undefined);
-      naverReviews = result.naverReviews;
-    } catch (e) {
-      naverError =
-        e instanceof Error
-          ? e
-          : new Error("네이버 리뷰를 불러오는 중 오류가 발생했습니다.");
-    }
+  // Fetch reviews in parallel
+  const [naverResult, kakaoResult] = await Promise.allSettled([
+    naverId
+      ? fetchReviews(naverId, undefined)
+      : Promise.resolve({ naverReviews: [] }),
+    kakaoId
+      ? fetchReviews(undefined, kakaoId)
+      : Promise.resolve({ kakaoReviews: [] }),
+  ]);
+
+  // Handle Naver reviews result
+  if (naverResult.status === "fulfilled") {
+    naverReviews = naverResult.value.naverReviews;
+  } else {
+    naverError =
+      naverResult.reason instanceof Error
+        ? naverResult.reason
+        : new Error("네이버 리뷰를 불러오는 중 오류가 발생했습니다.");
   }
 
-  // Fetch Kakao reviews if ID is provided
-  if (kakaoId) {
-    try {
-      const result = await fetchReviews(undefined, kakaoId);
-      kakaoReviews = result.kakaoReviews;
-    } catch (e) {
-      kakaoError =
-        e instanceof Error
-          ? e
-          : new Error("카카오 리뷰를 불러오는 중 오류가 발생했습니다.");
-    }
+  // Handle Kakao reviews result
+  if (kakaoResult.status === "fulfilled") {
+    kakaoReviews = kakaoResult.value.kakaoReviews;
+  } else {
+    kakaoError =
+      kakaoResult.reason instanceof Error
+        ? kakaoResult.reason
+        : new Error("카카오 리뷰를 불러오는 중 오류가 발생했습니다.");
   }
 
   // Render content with appropriate state handling

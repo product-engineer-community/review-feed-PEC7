@@ -5,6 +5,7 @@ import {
   EmptyState,
   LoadingState,
 } from "@/entities/review/ui";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 
 interface ReviewDetailContentProps {
   naverReviews: NaverReview[];
@@ -14,6 +15,16 @@ interface ReviewDetailContentProps {
   isLoading?: boolean;
 }
 
+// Generate a unique key for Naver review
+function getNaverReviewKey(review: NaverReview): string {
+  return `naver-${review.nickname}-${review.visitDate}-${review.body.slice(0, 50)}`;
+}
+
+// Generate a unique key for Kakao review
+function getKakaoReviewKey(review: KakaoReview): string {
+  return `kakao-${review.nickname}-${review.reviewDate}-${review.body.slice(0, 50)}`;
+}
+
 export function ReviewDetailContent({
   naverReviews,
   kakaoReviews,
@@ -21,16 +32,6 @@ export function ReviewDetailContent({
   kakaoError,
   isLoading = false,
 }: ReviewDetailContentProps) {
-  // Loading state
-  if (isLoading) {
-    return (
-      <LoadingState
-        title="리뷰 불러오는 중"
-        message="네이버와 카카오 리뷰를 불러오는 중입니다..."
-      />
-    );
-  }
-
   // Both sources have errors
   if (naverError && kakaoError) {
     return (
@@ -56,63 +57,68 @@ export function ReviewDetailContent({
     );
   }
 
-  // Success state - render reviews with individual error/empty states
+  // Success state - render reviews with tabs
   return (
     <main className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4">
-        {/* Naver Reviews Section */}
-        {naverError ? (
-          <section className="mb-8">
-            <ErrorState title="네이버 리뷰 오류" message={naverError.message} />
-          </section>
-        ) : naverReviews.length === 0 ? (
-          <section className="mb-8">
-            <EmptyState
-              title="네이버 리뷰가 없습니다"
-              message="이 장소에 대한 네이버 리뷰가 아직 없습니다."
-            />
-          </section>
-        ) : (
-          <section className="mb-8">
-            <h2 className="mb-4 text-2xl font-bold">네이버 리뷰</h2>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {naverReviews.map((review, index) => (
-                <ReviewItem
-                  key={`naver-${index}`}
-                  naverReview={review}
-                  kakaoReview={null}
-                />
-              ))}
-            </div>
-          </section>
-        )}
+        <Tabs defaultValue="naver" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="naver">네이버 리뷰</TabsTrigger>
+            <TabsTrigger value="kakao">카카오 리뷰</TabsTrigger>
+          </TabsList>
 
-        {/* Kakao Reviews Section */}
-        {kakaoError ? (
-          <section>
-            <ErrorState title="카카오 리뷰 오류" message={kakaoError.message} />
-          </section>
-        ) : kakaoReviews.length === 0 ? (
-          <section>
-            <EmptyState
-              title="카카오 리뷰가 없습니다"
-              message="이 장소에 대한 카카오 리뷰가 아직 없습니다."
-            />
-          </section>
-        ) : (
-          <section>
-            <h2 className="mb-4 text-2xl font-bold">카카오 리뷰</h2>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {kakaoReviews.map((review, index) => (
-                <ReviewItem
-                  key={`kakao-${index}`}
-                  naverReview={null}
-                  kakaoReview={review}
-                />
-              ))}
-            </div>
-          </section>
-        )}
+          <TabsContent value="naver" className="mt-6">
+            {isLoading ? (
+              <LoadingState platform="naver" />
+            ) : naverError ? (
+              <ErrorState
+                title="네이버 리뷰 오류"
+                message={naverError.message}
+              />
+            ) : naverReviews.length === 0 ? (
+              <EmptyState
+                title="네이버 리뷰가 없습니다"
+                message="이 장소에 대한 네이버 리뷰가 아직 없습니다."
+              />
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {naverReviews.map((review) => (
+                  <ReviewItem
+                    key={getNaverReviewKey(review)}
+                    naverReview={review}
+                    kakaoReview={null}
+                  />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="kakao" className="mt-6">
+            {isLoading ? (
+              <LoadingState platform="kakao" />
+            ) : kakaoError ? (
+              <ErrorState
+                title="카카오 리뷰 오류"
+                message={kakaoError.message}
+              />
+            ) : kakaoReviews.length === 0 ? (
+              <EmptyState
+                title="카카오 리뷰가 없습니다"
+                message="이 장소에 대한 카카오 리뷰가 아직 없습니다."
+              />
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {kakaoReviews.map((review) => (
+                  <ReviewItem
+                    key={getKakaoReviewKey(review)}
+                    naverReview={null}
+                    kakaoReview={review}
+                  />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </main>
   );
