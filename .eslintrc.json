@@ -1,19 +1,15 @@
 {
   "root": true,
-  "extends": [
-    "next/core-web-vitals",
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
+  "extends": "next/core-web-vitals",
   "parser": "@typescript-eslint/parser",
   "plugins": ["simple-import-sort", "import"],
   "rules": {
-    "simple-import-sort/imports": "error",
-    "simple-import-sort/exports": "error",
+    "simple-import-sort/imports": "off",
+    "simple-import-sort/exports": "off",
     "import/first": "error",
     "import/newline-after-import": "error",
-    "import/no-duplicates": "error"
+    "import/no-duplicates": "error",
+    "@next/next/no-img-element": "off"
   },
   "parserOptions": {
     "sourceType": "module",

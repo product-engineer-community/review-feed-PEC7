@@ -1,30 +1,33 @@
-import { redirect } from "next/navigation";
-import { useActionState } from "react";
+// import { redirect } from "next/navigation";
+// import { useFormState } from "react-dom";
 
-import { AuthFormState } from "@/features/auth/model/auth.interface";
-import { createUser } from "@/features/sign-up/api/create-user";
-import { LOGIN_PATHNAME } from "@/shared/config/pathname";
+// import { AuthFormState } from "@/features/auth/model/auth.interface";
+// import { signUp } from "@/features/sign-up/api/sign-up";
+// import { MAIN_PATHNAME } from "@/shared/config/pathname";
 
-export const useSignUpActionState = () => {
-  const signUpWithFormData = async (
-    prevState: AuthFormState,
-    formData: FormData,
-  ) => {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+// export const useSignUpActionState = () => {
+//   const signUpWithFormData = async (
+//     prevState: AuthFormState,
+//     formData: FormData,
+//   ): Promise<AuthFormState> => {
+//     "use server";
 
-    const signUpRes = await createUser({ email, password });
-    if (signUpRes.message !== "SUCCESS") {
-      return signUpRes;
-    }
+//     const email = formData.get("email") as string;
+//     const password = formData.get("password") as string;
 
-    redirect(LOGIN_PATHNAME);
-  };
+//     const { error } = await signUp({ email, password });
 
-  const [signUpFormState, singUpAndLoginAction] = useActionState<
-    AuthFormState,
-    FormData
-  >(signUpWithFormData, null);
+//     if (error) {
+//       return { message: error.message };
+//     }
 
-  return { signUpFormState, singUpAndLoginAction };
-};
+//     redirect(MAIN_PATHNAME);
+//   };
+
+//   const [signUpFormState, singUpAndLoginAction] = useFormState<
+//     AuthFormState,
+//     FormData
+//   >(signUpWithFormData, null);
+
+//   return { signUpFormState, singUpAndLoginAction };
+// };
