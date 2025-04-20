@@ -1,31 +1,33 @@
-import { redirect } from "next/navigation";
-import { useActionState } from "react";
+// import { redirect } from "next/navigation";
+// import { useFormState } from "react-dom";
 
-import { AuthFormState } from "@/features/auth/model/auth.interface";
-import { login } from "@/features/login/api/login";
-import { MAIN_PATHNAME } from "@/shared/config/pathname";
+// import { AuthFormState } from "@/features/auth/model/auth.interface";
+// import { login } from "@/features/login/api/login";
+// import { MAIN_PATHNAME } from "@/shared/config/pathname";
 
-export const useLoginActionState = () => {
-  const loginWithFormData = async (
-    prevState: AuthFormState,
-    formData: FormData,
-  ) => {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+// export const useLoginActionState = () => {
+//   const loginWithFormData = async (
+//     prevState: AuthFormState,
+//     formData: FormData,
+//   ): Promise<AuthFormState> => {
+//     "use server";
 
-    const res = await login({ email, password });
+//     const email = formData.get("email") as string;
+//     const password = formData.get("password") as string;
 
-    if (res.message !== "SUCCESS") {
-      return res;
-    }
+//     const { error } = await login({ email, password });
 
-    redirect(MAIN_PATHNAME);
-  };
+//     if (error) {
+//       return { message: error.message };
+//     }
 
-  const [loginFormState, loginFormAction] = useActionState<
-    AuthFormState,
-    FormData
-  >(loginWithFormData, null);
+//     redirect(MAIN_PATHNAME);
+//   };
 
-  return { loginFormState, loginFormAction };
-};
+//   const [loginFormState, loginFormAction] = useFormState<
+//     AuthFormState,
+//     FormData
+//   >(loginWithFormData, null);
+
+//   return { loginFormState, loginFormAction };
+// };

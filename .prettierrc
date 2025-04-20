@@ -4,5 +4,9 @@
     "eslint-plugin-simple-import-sort"
   ],
   "tailwindConfig": "./tailwind.config.ts",
-  "tailwindFunctions": ["clsx"]
+  "tailwindFunctions": ["clsx"],
+  "semi": true,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "es5"
 }
