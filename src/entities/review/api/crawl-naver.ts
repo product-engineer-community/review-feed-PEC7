@@ -1,7 +1,7 @@
 import { chromium } from "playwright";
 import { NaverReview } from "../model/types";
 
-export async function fetchNaverReviews(id: string): Promise<NaverReview[]> {
+export async function fetchNaver(id: string): Promise<NaverReview[]> {
   const url = `https://m.place.naver.com/restaurant/${id}/review/visitor?entry=ple&reviewSort=recent`;
 
   let browser;

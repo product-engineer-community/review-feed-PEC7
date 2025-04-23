@@ -20,3 +20,17 @@ export interface KakaoReview {
   body: string;
   photos: string[];
 }
+
+export interface KakaoPlaceInfo {
+  name: string;
+  mainImage: string;
+  rating: string;
+  openState: string;
+  openUntil: string;
+  reviewCount: string;
+}
+
+export interface KakaoPlaceData {
+  placeInfo: KakaoPlaceInfo;
+  reviews: KakaoReview[];
+}

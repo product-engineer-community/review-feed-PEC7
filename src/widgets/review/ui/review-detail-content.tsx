@@ -1,6 +1,7 @@
 import { NaverReview, KakaoReview } from "@/entities/review/model/types";
 import {
-  ReviewItem,
+  KakaoReviewCard,
+  NaverReviewCard,
   ErrorState,
   EmptyState,
   LoadingState,
@@ -83,10 +84,9 @@ export function ReviewDetailContent({
             ) : (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {naverReviews.map((review) => (
-                  <ReviewItem
+                  <NaverReviewCard
                     key={getNaverReviewKey(review)}
-                    naverReview={review}
-                    kakaoReview={null}
+                    review={review}
                   />
                 ))}
               </div>
@@ -109,10 +109,9 @@ export function ReviewDetailContent({
             ) : (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {kakaoReviews.map((review) => (
-                  <ReviewItem
+                  <KakaoReviewCard
                     key={getKakaoReviewKey(review)}
-                    naverReview={null}
-                    kakaoReview={review}
+                    review={review}
                   />
                 ))}
               </div>

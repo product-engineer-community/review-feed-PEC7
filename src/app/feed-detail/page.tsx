@@ -1,6 +1,11 @@
 import { fetchReviews } from "@/entities/review/api/fetch-reviews";
-import { ReviewDetailContent, ErrorState } from "@/entities/review/ui";
-import { NaverReview, KakaoReview } from "@/entities/review/model/types";
+import { ErrorState } from "@/entities/review/ui";
+import { ReviewDetailContent } from "@/widgets/review/ui";
+import {
+  NaverReview,
+  KakaoReview,
+  KakaoPlaceInfo,
+} from "@/entities/review/model/types";
 import { Suspense } from "react";
 import FeedDetailLoading from "./loading";
 
@@ -8,13 +13,16 @@ interface FeedDetailPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+const getSingleParam = (value: unknown): string | undefined =>
+  typeof value === "string" ? value : undefined;
+
 export default async function FeedDetailPage({
   searchParams,
 }: FeedDetailPageProps) {
   const params = await searchParams;
 
-  const naverId = typeof params.naver === "string" ? params.naver : undefined;
-  const kakaoId = typeof params.kakao === "string" ? params.kakao : undefined;
+  const naverId = getSingleParam(params.naver);
+  const kakaoId = getSingleParam(params.kakao);
 
   // No IDs provided
   if (!naverId && !kakaoId) {

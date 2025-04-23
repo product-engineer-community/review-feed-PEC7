@@ -1,7 +1,7 @@
 import { chromium } from "playwright";
 import { KakaoReview } from "../model/types";
 
-export async function fetchKakaoReviews(id: string): Promise<KakaoReview[]> {
+export async function fetchKakao(id: string): Promise<KakaoReview[]> {
   const url = `https://place.map.kakao.com/${id}`;
 
   let browser;
