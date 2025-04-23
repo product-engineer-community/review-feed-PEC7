@@ -1,13 +1,18 @@
 "use server";
 
-import { NaverReview, KakaoReview } from "@/entities/review/model/types";
+import {
+  NaverReview,
+  KakaoReview,
+  KakaoPlaceInfo,
+} from "@/entities/review/model/types";
 
 export async function fetchReviews(
   naverId?: string,
-  kakaoId?: string
+  kakaoId?: string,
 ): Promise<{
   naverReviews: NaverReview[];
   kakaoReviews: KakaoReview[];
+  kakaoPlaceInfo?: KakaoPlaceInfo;
 }> {
   const params = new URLSearchParams();
   if (naverId) params.append("naver", naverId);

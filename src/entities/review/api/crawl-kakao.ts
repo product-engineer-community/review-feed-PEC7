@@ -1,7 +1,7 @@
 import { chromium } from "playwright";
-import { KakaoReview } from "../model/types";
+import { KakaoPlaceData, KakaoReview } from "../model/types";
 
-export async function fetchKakao(id: string): Promise<KakaoReview[]> {
+export async function fetchKakao(id: string): Promise<KakaoPlaceData> {
   const url = `https://place.map.kakao.com/${id}`;
 
   let browser;
@@ -18,6 +18,29 @@ export async function fetchKakao(id: string): Promise<KakaoReview[]> {
     const page = await context.newPage();
 
     await page.goto(url, { waitUntil: "networkidle" });
+
+    await page.waitForSelector(".top_basic", { timeout: 10000 });
+
+    const placeInfo = await page.evaluate(() => {
+      const getText = (selector: string) =>
+        document.querySelector(selector)?.textContent?.trim() || "";
+      const getImg = (selector: string) =>
+        (document.querySelector(selector) as HTMLImageElement)?.src || "";
+      const getHref = (selector: string) =>
+        (document.querySelector(selector) as HTMLAnchorElement)?.href || "";
+
+      return {
+        name: getText(".tit_place"),
+        mainImage: getImg(".link_photo img"),
+        rating: getText(".num_star"),
+        openState: getText(".info_state"),
+        openUntil: getText(".info_runtime"),
+        reviewCount: getText(".link_review .info_num"),
+        address: getText(".unit_default .txt_detail"),
+        phone: getText(".info_suggest .txt_detail"),
+        homepage: getHref(".info_suggest .link_detail"),
+      };
+    });
 
     // 리뷰 리스트 로딩 대기
     await page.waitForSelector(".list_review > li", { timeout: 30000 });
@@ -49,7 +72,7 @@ export async function fetchKakao(id: string): Promise<KakaoReview[]> {
         }),
     );
 
-    return reviews;
+    return { reviews, placeInfo };
   } catch (error) {
     console.error("Kakao Crawler: Error during crawl", error);
     throw error;

@@ -28,6 +28,9 @@ export interface KakaoPlaceInfo {
   openState: string;
   openUntil: string;
   reviewCount: string;
+  address?: string;
+  phone?: string;
+  homepage?: string;
 }
 
 export interface KakaoPlaceData {

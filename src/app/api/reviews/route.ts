@@ -17,7 +17,11 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const results: { naverReviews: any[]; kakaoReviews: any[] } = {
+    const results: {
+      naverReviews: any[];
+      kakaoReviews: any[];
+      kakaoPlaceInfo?: any;
+    } = {
       naverReviews: [],
       kakaoReviews: [],
     };
@@ -33,7 +37,8 @@ export async function GET(request: NextRequest) {
     const kakaoPromise = kakaoId
       ? fetchKakao(kakaoId)
           .then((data) => {
-            results.kakaoReviews = data;
+            results.kakaoReviews = data.reviews;
+            results.kakaoPlaceInfo = data.placeInfo;
           })
           .catch(() => {})
       : Promise.resolve();

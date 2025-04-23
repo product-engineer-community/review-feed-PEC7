@@ -60,8 +60,8 @@ export function ReviewDetailContent({
 
   // Success state - render reviews with tabs
   return (
-    <main className="min-h-screen bg-background py-8">
-      <div className="container mx-auto px-4">
+    <main className="min-h-screen w-full bg-background py-8">
+      <div className="container mx-auto">
         <Tabs defaultValue="naver" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="naver">네이버 리뷰</TabsTrigger>

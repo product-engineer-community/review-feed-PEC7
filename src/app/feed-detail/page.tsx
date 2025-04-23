@@ -1,5 +1,5 @@
 import { fetchReviews } from "@/entities/review/api/fetch-reviews";
-import { ErrorState } from "@/entities/review/ui";
+import { ErrorState, DetailInfo } from "@/entities/review/ui";
 import { ReviewDetailContent } from "@/widgets/review/ui";
 import {
   NaverReview,
@@ -37,6 +37,7 @@ export default async function FeedDetailPage({
   // Initialize variables for reviews and errors
   let naverReviews: NaverReview[] = [];
   let kakaoReviews: KakaoReview[] = [];
+  let kakaoPlaceInfo: KakaoPlaceInfo | undefined = undefined;
   let naverError: Error | null = null;
   let kakaoError: Error | null = null;
 
@@ -63,6 +64,8 @@ export default async function FeedDetailPage({
   // Handle Kakao reviews result
   if (kakaoResult.status === "fulfilled") {
     kakaoReviews = kakaoResult.value.kakaoReviews;
+    kakaoPlaceInfo = (kakaoResult.value as { kakaoPlaceInfo?: KakaoPlaceInfo })
+      .kakaoPlaceInfo;
   } else {
     kakaoError =
       kakaoResult.reason instanceof Error
@@ -73,12 +76,15 @@ export default async function FeedDetailPage({
   // Render content with appropriate state handling
   return (
     <Suspense fallback={<FeedDetailLoading />}>
-      <ReviewDetailContent
-        naverReviews={naverReviews}
-        kakaoReviews={kakaoReviews}
-        naverError={naverError}
-        kakaoError={kakaoError}
-      />
+      <div className="flex max-w-6xl flex-col space-y-6 p-4">
+        {kakaoPlaceInfo && <DetailInfo place={kakaoPlaceInfo} />}
+        <ReviewDetailContent
+          naverReviews={naverReviews}
+          kakaoReviews={kakaoReviews}
+          naverError={naverError}
+          kakaoError={kakaoError}
+        />
+      </div>
     </Suspense>
   );
 }
