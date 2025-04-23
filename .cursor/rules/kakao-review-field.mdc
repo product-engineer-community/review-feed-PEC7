@@ -1,0 +1,70 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+🟡 Kakao Place Review Field Definitions
+
+This document defines the structure and extractable fields for visitor reviews on Kakao Place (https://place.map.kakao.com). Each review is represented by a <li> element under the .list_evaluation .evaluation_review container.
+
+Root Review URL
+
+- URL: https://place.map.kakao.com/{placeId}
+- Example: https://place.map.kakao.com/7931880
+
+Root Review Element
+
+- Selector: li
+- Parent Container: .list_evaluation
+- Description: Each <li> element contains one review block including profile, rating, text, and optional photos.
+
+Extractable Fields per Review
+
+1. Nickname
+
+- Selector: .name_user
+- Type: string
+- Example: 돌돌이
+- Description: The display name or alias of the reviewer.
+
+2. Profile Image
+
+- Selector: .thumb_profile img.img_g
+- Type: string (URL)
+- Example: https://img1.kakaocdn.net/...jpg
+- Description: Reviewer's profile photo.
+
+3. Review Date
+
+- Selector: .txt_date
+- Type: string
+- Example: 2025.01.09.
+- Description: The date when the review was posted.
+
+4. Rating (Stars)
+
+- Selector: .info_grade .screen_out:nth-of-type(2)
+- Type: string
+- Example: 5.0
+- Alternative: Count of .figure_star.on elements
+- Description: The star rating given by the reviewer (1–5).
+
+5. Review Content
+
+- Selector: .desc_review
+- Type: string
+- Example: “열탄불고기 사진을 못찍었어요…”
+- Description: The textual content of the review.
+
+6. Review Photos
+
+- Selector: .review_thumb img.img_g
+- Type: string[]
+- Example: ["https://img1.kakaocdn.net/...jpg"]
+- Description: List of attached image URLs in the review.
+
+Notes
+
+- Some fields (e.g. profile image or rating) may be missing for certain users.
+- The review section may be dynamically loaded after the page renders; headless browsers like Playwright are recommended.
+- Class names (e.g. .info_grade, .img_g) may be subject to change by Kakao.

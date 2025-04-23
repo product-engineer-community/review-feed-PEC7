@@ -1,3 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 # 🧑‍🏭 Coding Preferences – "Write Code Like This"
 
 ## Design Principles
@@ -75,8 +80,8 @@ feature/
 
 #### References
 
-- For detailed information about FSD architecture, refer to the [official documentation](https://feature-sliced.design/)
-- For Supabase configuration and usage, refer to [Supabase documentation](https://supabase.com/docs)
+- For detailed information about FSD architecture, refer to the [official documentation](mdc:https:/feature-sliced.design)
+- For Supabase configuration and usage, refer to [Supabase documentation](mdc:https:/supabase.com/docs)
 
 ## Advanced Constraints
 
